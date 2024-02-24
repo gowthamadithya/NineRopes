@@ -1,0 +1,122 @@
+:root {
+  --mainBlue: #2a2a72;
+  --lightBlue: #009ffd;
+  --mainWhite: #f3f3f3;
+  --mainDark: #232528;
+  --mainDark: #000;
+  --mainYellow: #ffa400;
+  --mainGrey: #161b22;
+  --mainBisc: #F2D2BD;
+  --mainPink: #F8C8DC;
+  --textWhite: #e7e9ea;
+  --bodyBlack: #0d1117;
+  --borderGrey: #3e4144;
+}
+
+body {
+  font-family: "Oswald", sans-serif !important;
+  background: var(--mainGrey) !important;
+  color: var(--textWhite) !important;
+}
+.text-title {
+  font-family: "Permanent Marker", cursive;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+}
+.text-blue {
+  color: var(--mainBlue);
+}
+.text-bright {
+  color: var(--lightBlue);
+}
+.navbar {
+  justify-content: flex-start !important;
+}
+.klip {
+  margin: 0 auto;
+  display: block;
+  background-color: var(--bodyBlack);
+  color: var(--textWhite);
+  border-radius: 20px;
+  border-color: var(--borderGrey);
+  border-style: solid;
+  width: auto;
+  padding: 1em;
+}
+
+.klip-options {
+  align-items: stretch;
+  background-color: var(--bodyBlack);
+  border: 0 solid black;
+  box-sizing: border-box;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: row;
+  flex-shrink: 0;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  position: relative;
+  text-decoration: none;
+  z-index: 0;
+}
+
+
+
+
+.CreateAKlipForm {
+  margin: 0 auto;
+  display: block;
+  width: 400px;
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  opacity: 75%;
+}
+
+.CreateAKlipForm label {
+  display: block;
+  width: 380px;
+  padding: 5px;
+  margin-top: 30px;
+}
+
+.CreateAKlipForm input {
+  display: block;
+  width: 380px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+
+.CreateAKlipForm textarea {
+  display: block;
+  width: 380px;
+  height: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+
+.CreateAKlipForm select {
+  display: block;
+  width: 400px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+
+.CreateAKlipForm button {
+  display: block;
+  margin: 40px auto;
+  width: 150px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid royalblue;
+  color: royalblue;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
