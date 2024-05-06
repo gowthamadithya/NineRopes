@@ -1,39 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from './Components/Login';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
 import InvalidURL from './Components/InvalidURL';
-import NavBar from './Components/NavBar';
-import Profile from './Components/Profile';
 
 // import { Provider, useSelector, useDispatch } from 'react-redux'
 // import {ADDPOST} from "./store/actions/postData.actions"
 // import store from './store';
 
 
-import PostKlip from './Components/CreateAKlip';
-import { Klips } from './Components/Klips';
+//import PostKlip from './Components/CreateAKlip';
+import { CreateAKlip, Feed, KlipDetails, Login, NavBar, Profile, SearchDetails } from './Components';
+import { Box, CssBaseline, ThemeProvider } from '@mui/material'
+import appTheme from './utils/constants';
 
 
-export default function App() {
+const App = () => (
+  <BrowserRouter>
+    <ThemeProvider theme={appTheme}>
+      <CssBaseline />
+      <Box sx={{ 'backgroundColor': '#161b22' }}>
+        <NavBar />
+        <Routes>
+          <Route path="/" exact element={<Feed />} />
+          <Route path="/klip/:id" element={<KlipDetails />} />
+          <Route path="/search/:searchText" exact element={<SearchDetails />} />
+        </Routes>
+      </Box>
+    </ThemeProvider>
+  </BrowserRouter>
+)
 
-
-
-
-  return (
-
-
-
-      <Routes>
-        <Route path="/" element={<NavBar />}>
-          <Route index element={<Login />} />
-          <Route path="/klips" element = {<Klips />} />
-          <Route path="/create" element = {<PostKlip />} />
-          <Route path="/profile" element = {<Profile />} />
-          <Route path="*" element={<InvalidURL />} />
-        </Route>
-      </Routes>
-
-
-  );
-}
+export default App;
