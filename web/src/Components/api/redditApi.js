@@ -31,13 +31,13 @@ import axios from 'axios';
 export const fetchAccessToken = async () => {
     try {
       const clientAuth = {
-        username: 'zu3jMHcZUNkgqH01kDJxXg',
-        password: 'VUDPuAxmm8OdwFn4sFpau-cB44oFMQ',
+        username: process.env.Client_Auth_User_Name,
+        password: process.env.Client_Auth_Password,
       };
-      const postData = {
+      const requestUserDetails = {
         grant_type: 'password',
-        username: 'ho_eslayer',
-        password: 'adithya123',
+        username: process.env.Request_User_Details_Username,
+        password: process.env.Request_User_Details_Password,
       };
       const headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -45,7 +45,7 @@ export const fetchAccessToken = async () => {
       };
       const response = await axios.post(
         'https://www.reddit.com/api/v1/access_token',
-        postData,
+        requestUserDetails,
         {
           auth: clientAuth,
           headers: headers,
