@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
-import Klips from "./klips";
 import { useTheme } from '@mui/material/styles';
 import SideBar from "./sidebar";
 import RedditApi, { fetchAccessToken } from "./api/redditApi";
-
+import Klips from "./Klips";
 
 
 
