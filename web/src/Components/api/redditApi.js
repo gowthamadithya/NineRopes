@@ -2,61 +2,36 @@ import React from 'react';
 import axios from 'axios';
 
 
-// // Function to fetch access token
-// export const fetchAccessToken = async () => {
-//     const clientId = 'zu3jMHcZUNkgqH01kDJxXg';
-//     const clientSecret = 'VUDPuAxmm8OdwFn4sFpau-cB44oFMQ';
-//     const postData = {
-//         grant_type: 'client_credentials',
-//     };
-//     try {
-//         const response = await axios.post(
-//             'https://www.reddit.com/api/v1/access_token',
-//             null,
-//             {
-//                 params: postData,
-//                 auth: {
-//                     username: clientId,
-//                     password: clientSecret,
-//                 },
-//             }
-//         );
-//         return response.data.access_token; // Return access token
-//     } catch (error) {
-//         console.error('Error:', error);
-//         throw new Error('Failed to fetch access token');
-//     }
-// };
-
 export const fetchAccessToken = async () => {
-    try {
-      const clientAuth = {
-        username: process.env.Client_Auth_User_Name,
-        password: process.env.Client_Auth_Password,
-      };
-      const requestUserDetails = {
-        grant_type: 'password',
-        username: process.env.Request_User_Details_Username,
-        password: process.env.Request_User_Details_Password,
-      };
-      const headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        // 'User-Agent': 'ChangeMeClient/0.1 by YourUsername',
-      };
-      const response = await axios.post(
-        'https://www.reddit.com/api/v1/access_token',
-        requestUserDetails,
-        {
-          auth: clientAuth,
-          headers: headers,
-        }
-      );
-      console.log(response.data.access_token);
-      localStorage.setItem('accessToken', response.data.access_token);
-      return response.data.access_token
-    } catch (error) {
-      console.error('Error fetching access token:', error);
-    }
+  try {
+    const clientAuth = {
+      username: process.env.REACT_APP_Client_Auth_User_Name,
+      password: process.env.REACT_APP_Client_Auth_Password,
+    };
+    const requestUserDetails = {
+      grant_type: 'password',
+      username: process.env.REACT_APP_Request_User_Details_User_Name,
+      password: process.env.REACT_APP_Request_User_Details_Password,
+    };
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    const response = await axios.post(
+      'https://www.reddit.com/api/v1/access_token',
+      requestUserDetails,
+      {
+        auth: clientAuth,
+        headers: headers,
+      }
+    );
+    console.log(response.data.access_token);
+    localStorage.clear()
+    localStorage.setItem('accessToken', response.data.access_token);
+    localStorage.setItem('accessExpireTime', Math.round(Date.now()) + response.data.expires_in);
+    return response.data.access_token
+  } catch (error) {
+    console.error('Error fetching access token:', error);
+  }
   };
 
 export default RedditApi;
@@ -65,12 +40,10 @@ export default RedditApi;
 
 const API_BASE_URL = 'https://oauth.reddit.com'
 export const accessToken = localStorage.getItem("accessToken")
+export const accessExpiretime = localStorage.getItem("accessExpireTime")
+
 async function RedditApi(url, method, payload = null) {
   try {
-    // Dispatch loading action if needed
-    // store.dispatch(setLoading(true));
-
-    // const authToken = localStorage.getItem('authToken');
     const headers = {
       // 'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
@@ -99,11 +72,11 @@ async function RedditApi(url, method, payload = null) {
         throw new Error(`Invalid method: ${method}`);
     }
     
-    if (response.status === 401) {
-        localStorage.clear();
-        // Redirect to login page if authentication fails
-        // window.location.href = '/login';
-    }
+    // if (response.status === 401) {
+    //     localStorage.clear();
+    //     Redirect to login page if authentication fails
+    //     window.location.href = '/login';
+    // }
     if (!response) {
       console.error('API request failed', response);
       throw new Error(response.statusText);

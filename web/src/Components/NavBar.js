@@ -1,22 +1,24 @@
-import { IconButton, Paper, Stack, useTheme } from '@mui/material'
+import { Autocomplete, IconButton, Paper, Stack, TextField, getStepConnectorUtilityClass } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import React, { useEffect, useState } from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import homeLogo from '../homeLogo.png'
-import RedditApi from "./api/redditApi";
+import RedditApi from './api/redditApi';
 
-export default function NavBar() {
-  const Theme = useTheme()
+export const NavBar = ()=> {
   return (
     <>
     <Stack 
       direction={'row'} 
       alignItems={'center'} 
       padding={2}
-      sx={{background: Theme.palette.background.dark,
+      sx={{
+        background: 'primary.main',
         position: 'sticky',
         top: 0,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        borderBottom: '1px solid', // Border on right for medium screens and above
+        borderColor: 'divider',
         }} 
     > 
     <Link to='/' style={{display: 'flex',
@@ -31,54 +33,68 @@ export default function NavBar() {
     <SearchBar />
 
     </Stack>
-    <Outlet />
+
     </>
   )
 }
 
 
 
-const SearchBar = () => {
-  const [searchText, setsearchText] = useState('')
-  const [searchResults, setSearchResults] = useState([])
 
-  const handleSearch = () => {
-    RedditApi('/r/search?limit=100', 'GET')
+const SearchBar = () => {
+  const navigate = useNavigate();
+  const [searchText, setSearchText] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  console.log({searchText});
+
+  const getSearchResults = (inputValue) => {
+    RedditApi(`/api/subreddit_autocomplete?query=${inputValue}&include_over_18=false`, 'GET')
       .then(responseData => {
-        console.log(responseData)
-        setSearchResults(responseData);
+        console.log(responseData.subreddits);
+        setSearchResults(responseData.subreddits);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
         // Handle error state if needed
       });
-  }
+  };
 
-  return ( 
-    <Paper 
-      component='form'
-      onSubmit={()=> handleSearch()}
-      sx={{
-        borderRadius: 20,
-        paddingLeft: 2,
-        boxShadow: 'none',
-        marginRight: {sm: 5}
+  const handleSearch = () => {
+    navigate(`/search/${searchText}`);
+  };
+
+  const handleOptionClick = (selectedValue) => {
+    navigate(`/rope/${selectedValue}`);
+  };
+
+  return (
+    <Autocomplete
+      freeSolo
+      options={searchResults?.map((option) => option.name)}
+      onInputChange={(event, newInputValue) => {
+        // Handle the input change event here
+        setSearchText(newInputValue);
+        getSearchResults(newInputValue);
       }}
-    >
-      <input
-        placeholder='Search...'
-        value=""
-        onChange={(e) => setsearchText(e.target.value)}
-      />
-      <IconButton 
-        type='submit'
-        sx={{
-          // color: '#009ffd',
-          // border: '1px',
-          // outline: 'none'
-        }}>
-        <SearchIcon />
-      </IconButton>
-    </Paper>
-  )
-}
+      onChange={(event, value) => {
+        // Handle option selection
+        if (value) {
+          handleOptionClick(value);
+        }
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Search"
+          sx={{
+            width: { xs: '8rem', md: '20rem' }
+          }}
+        />
+      )}
+    />
+  );
+};
+
+export default SearchBar;
+
+
