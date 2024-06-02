@@ -5,20 +5,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
-import { red } from '@mui/material/colors';
+import { blue, red } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
-
-// const appTheme = createTheme({
-
-//   typography: {
-//     fontSize: 11,
-//     fontFamily: 'Droid Sans',
-//   },
-//   spacing: 8,
-//   shape: {
-//     borderRadius: 10,
-//   },
-// })
 
 
 const appTheme = createTheme({
@@ -63,11 +51,45 @@ const appTheme = createTheme({
     },
   },
   typography: {
-    // Your typography settings
+    fontFamily: 'Jersey 25 Charted',
+    fontSize: 14,
+    htmlFontSize: 16,
+    h6: {
+      fontFamily: 'Droid Sans',
+      fontSize: '1.2rem',
+      letterSpacing: '0.1rem',
+    },
+    body1: {
+      fontFamily: 'Droid Sans',
+      fontSize: '1rem',
+    },
   },
-  spacing: 8,
+  spacing: 4,
   shape: {
-    // Your shape settings
+    borderRadius: 8
+  },
+  shadows: [
+    'none',
+    '0px 2px 4px rgba(255, 255, 255, 0.3)', // Small shadow
+    '0px 4px 8px rgba(255, 255, 255, 0.3)', // Medium shadow
+    '0px 8px 16px rgba(255, 255, 255, 0.3)', // Large shadow
+  ],
+  transitions: {
+    easing: {
+      easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      easeOut: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+      easeIn: 'cubic-bezier(0.55, 0.055, 0.675, 0.19)',
+      sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
+    },
+    duration: {
+      shortest: 150,
+      shorter: 200,
+      short: 250,
+      standard: 300,
+      complex: 375,
+      enteringScreen: 225,
+      leavingScreen: 195,
+    },
   },
 });
 

@@ -1,29 +1,53 @@
 import { useEffect, useState } from "react";
-import { Box, Stack, Typography } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
-import SideBar from "./sidebar";
-import RedditApi, { fetchAccessToken } from "./api/redditApi";
+import { Box, CircularProgress, NativeSelect, Stack, Typography } from "@mui/material";
+import RedditApi, { accessExpiretime, fetchAccessToken } from "./api/redditApi";
 import Klips from "./Klips";
+import { useParams } from "react-router-dom";
 
 
 
 
-export function Feed() {
+export function Feed({ curRoute = null, isRope = null}) {
 
-  const Theme = useTheme();
+  const [klips, setKlips] = useState()
+  const [selectedFeed, setselectedFeed] = useState('hot')
+  const mediaTypes = ['all', 'video', 'image', 'audio']
 
-  const [klips, setKlips] = useState([])
-  const [selectValue, setSelectValue] = useState('Hot')
-  const feedTypes = [{name: 'Hot'}, {name: 'New'}, {name: 'Top'}]
-  const [selectedOption, setSelectedOption] = useState('Home')
-  const [accessToken, setaccessToken] = useState('')
+  useEffect( () => {
+    if (Date.now() > accessExpiretime){
+      fetchAccessToken()
+    }
+  },[]);
 
-  const Func = function(data) {
-    console.log(data);
-}
+
+  // const {urlParams} = useParams()
+  // console.log(urlParams)
+  // if (urlParams){
+  //   setFeedPath(`/r/${isRope}/${selectedOption}?limit=100`)
+  // }else{
+  //   isRope ? setFeedPath(`/r/${isRope}/${selectedOption}?limit=100`)
+  //   : setFeedPath(`/${selectedOption}?limit=100`)
+  // }
+
+
+
+  console.log("select option", selectedFeed)
+
+
 
   useEffect(() => {
-    RedditApi('/r/bleach?limit=100', 'GET')
+    let feedPath
+    // feedPath = '/api/subreddit_autocomplete?query=aizen&incude_over_18=false'
+    if (curRoute) {
+      feedPath = curRoute 
+      console.log('entered if', feedPath)
+    } else {
+      feedPath = isRope ? `/r/${isRope}/${selectedFeed}?limit=100`
+        : `/${selectedFeed}?limit=100`
+      console.log('entered else', feedPath)
+    }
+    console.log(feedPath)
+    RedditApi(feedPath, 'GET')
       .then(responseData => {
         console.log(responseData.data.children)
         setKlips(responseData.data.children);
@@ -32,101 +56,105 @@ export function Feed() {
         console.error('Error fetching data:', error);
         // Handle error state if needed
       });
-  }, [selectValue, selectedOption]);
+  }, [selectedFeed, curRoute, isRope]);
 
 
-  useEffect( () => {
-    fetchAccessToken()
-  },[]);
 
 
-    const SelectDropdown = () => {
-        return (
-          <select 
-          value={selectValue} 
-          style={{color: Theme.palette.primary.main, backgroundColor: Theme.palette.background.default}}
-          onChange={(e)=> setSelectValue(e.target.value)}
-          >
-           {
-           feedTypes?.map( (feedType) => (
-           <option value={feedType.name} key={feedType.name}>{feedType.name}</option>
-           ))
-           }
-         </select>
+  const feedTypes = ['hot', 'best', 'top', 'new']
+  const FeedDropdown = () => {
+    return (
+      <NativeSelect
+        value={selectedFeed}
+        sx={{ color: 'primary.main', backgroundColor: 'background.default' }}
+        onChange={(e) => {
+          setselectedFeed(e.target.value)
+          setKlips()
+        }}
+      >
+        {
+          feedTypes?.map((feedType) => (
+            <option value={feedType} key={feedType}>{feedType}</option>
+          ))
+        }
+      </NativeSelect>
     )
   }
 
-console.log("select value", selectValue)
-console.log("select option", selectedOption)
+
+
+  const routeMap = {
+    search: (<p>searchDetails for {curRoute}</p> ),
+    rope: (<p>Rope details for {isRope}</p>)
+  }
+
+
+  // console.log("select value", selectedFeed)
+
 
   return (
     <>
-        <Stack
-      sx={{
-        backgroundColor: Theme.palette.background.default,
-        flexDirection: { xs: 'column', md: 'row' },
-        height: '100vh', // Set the stack height to match viewport height
-      }}
-    >
       <Box
         sx={{
-          color: Theme.palette.text.primary,
-          backgroundColor: Theme.palette.background.default,
-          height: 'auto', // Full height of parent stack
+          height: '100%', // Full height of parent stack
+          width: { xs: 'auto', md: 'calc(50%)' }, // Full width for small screens, adjusted width for medium and above
           borderRight: { md: 1 }, // Border on right for medium screens and above
-          borderColor: Theme.palette.divider,
-          borderBottom: { md: 'none', xs: 1 }, // Border on bottom for medium screens and above
-          px: { xs: 0, md: 2 }, // Padding for inner content
-          width: { xs: 'auto', md: '30%' }, // Full width for small screens, auto for medium and above
-          // "&:hover": {
-          //   backgroundColor: Theme.palette.primary.main,
-          // }
-        }}
-      >
-        <SideBar selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
-        {/* <Typography
-          variant="body2"
-          sx={{ mt: { sx: 1, md: 1.5 }, 
-          color: Theme.palette.primary.main,
-          backgroundColor: Theme.palette.background.default,
-          display: { xs: 'none', md: 'block' }
-         }}
-        >
-          Copyright © 2024 Klip Book
-        </Typography> */}
-      </Box>
-
-      <Box
-        sx={{
-          height: 'auto', // Full height of parent stack
-          width: { xs: 'auto', md: 'calc(100% - 480px)' }, // Full width for small screens, adjusted width for medium and above
-          borderRight: { md: 1 }, // Border on right for medium screens and above
-          borderColor: Theme.palette.divider,
+          borderColor: 'divider',
           px: 2, // Padding for inner content
-          overflowY: 'scroll'
+          // overflowY: 'scroll',
+          backgroundColor: 'background.dark'
         }}
       >
-        <Typography>
-          <SelectDropdown />
-        </Typography>
-        <Klips klips={klips} />
+
+        {/* {curRoute?.includes("search") ? (<p>searchDetails for {curRoute}</p> )
+        : isRope ? (<p>Rope details for {isRope}</p>)
+        : null} */}
+
+        {/* {curRoute?.(curRoute.split("/"))[0] */}
+
+        
+        <Stack direction='row'>
+          <Typography>
+            <FeedDropdown />
+          </Typography>
+          <Typography>
+            <button> hello </button>
+          </Typography>
+
+        </Stack>
+
+        {klips ?
+          (
+            <Klips klips={klips} />
+          ) :
+          (
+            <CircularProgress 
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 2,
+            }}
+            />
+
+          )}
+
       </Box>
 
       <Box
-        sx={{
-          height: 'auto', // Full height of parent stack
-          display: { xs: 'none', md: 'block' }, // Hide on small screens, show on medium and above
-          width: '480px', // Fixed width for large screens
-          borderRight: '2px solid #3d3d3d', // Border on right
-        }}
-      >
-        Favourite Ropes
+            sx={{
+              height: 'auto', // Full height of parent stack
+              display: { xs: 'none', md: 'block' }, // Hide on small screens, show on medium and above
+              width: '480px', // Fixed width for large screens
+              borderRight: 'divider' //'2px solid #3d3d3d', // Border on right
+            }}
+          >
+            Favourite Ropes
       </Box>
-    </Stack>
 
 
     </>
-
   )
 
 }
