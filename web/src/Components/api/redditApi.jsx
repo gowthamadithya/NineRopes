@@ -1,18 +1,19 @@
-import React from 'react';
+
 import axios from 'axios';
 
 
 export const fetchAccessToken = async () => {
   try {
     const clientAuth = {
-      username: process.env.REACT_APP_Client_Auth_User_Name,
-      password: process.env.REACT_APP_Client_Auth_Password,
+      username: import.meta.env.VITE_Client_Auth_User_Name,
+      password: import.meta.env.VITE_Client_Auth_Password,
     };
     const requestUserDetails = {
       grant_type: 'password',
-      username: process.env.REACT_APP_Request_User_Details_User_Name,
-      password: process.env.REACT_APP_Request_User_Details_Password,
+      username: import.meta.env.VITE_Request_User_Details_User_Name,
+      password: import.meta.env.VITE_Request_User_Details_Password,
     };
+
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
@@ -43,9 +44,10 @@ export const accessToken = localStorage.getItem("accessToken")
 export const accessExpiretime = localStorage.getItem("accessExpireTime")
 
 async function RedditApi(url, method, payload = null) {
+  let config = {}
   try {
     const headers = {
-      // 'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     //   "User-Agent": "ChangeMeClient/0.1 by YourUsername"
     //   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0'

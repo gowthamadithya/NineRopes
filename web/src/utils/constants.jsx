@@ -5,7 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
-import { blue, red } from '@mui/material/colors';
+import { blue, red, purple } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
 
@@ -13,7 +13,7 @@ const appTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#009ffd',
+      main: purple[500] //'#009ffd',
     },
     secondary: {
       main: '#f50057',
