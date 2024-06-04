@@ -2,7 +2,7 @@ import { Autocomplete, IconButton, Paper, Stack, TextField, getStepConnectorUtil
 import SearchIcon from '@mui/icons-material/Search';
 import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
-import homeLogo from '../homeLogo.png'
+// import homeLogo from '../homeLogo.png'
 import RedditApi from './api/redditApi';
 
 export const NavBar = ()=> {
@@ -22,12 +22,14 @@ export const NavBar = ()=> {
         }} 
     > 
     <Link to='/' style={{display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      color: 'purple'
       }}>
-    <img 
+    {/* <img 
     height = '30vh'
     width= '100vh'
-    src={homeLogo} alt='homeLogo' />
+    src={homeLogo} alt='homeLogo' /> */}
+    NineRopes
     </Link>
     
     <SearchBar />
